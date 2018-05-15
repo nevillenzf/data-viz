@@ -6,108 +6,93 @@ body {
 	padding: 0px;
 	overflow-x: hidden;
 	background-color: rgba(224, 235, 235,0.7);
+	font-family: Bahnschrift;
  
 	}
 ul
 {
-	top: -15px;
-	padding: 0px;
 }
 li {
-	padding-top: 5px;
 	display: inline;
-	padding-left: 2%;
 	float: right;
+	color: black;
 }
 
 .selected{
 	height: 20px;
 	width: 20px;
 	opacity: 1;
-	border-color: #33ccff;
-	border-style: solid;
-	border-width: 1.5px;
-
-}
-
-#histogram
-{
- 	background-image: url(icons/icon1.png);
- 	background-size: 20px;
-}
-#density
-{
- 	background-image: url(icons/icon4.png);
- 	 	background-size: 20px;
-}
-#violin
-{
- 	background-image: url(icons/icon2.png);
- 	 	background-size: 20px;
-}
-#box
-{
- 	background-image: url(icons/icon5.png);
- 	background-size: 20px;
-}
-#bar
-{
- 	background-image: url(icons/icon3.png);
- 	background-size: 20px;
+	background-color: rgb(0, 134, 179);
+	color: white;
 }
 
 button {
-	height: 20px;
-	width: 20px;
-	   	background-repeat: no-repeat;
+	height: 30px;
+	width: 80px;
+	background-repeat: no-repeat;
   	background-position: 50% 50%;
   /* put the height and width of your image here */
-  	border: none;
-  	opacity: 0.5;
-  	color: white;
-  	background-color: rgba(0,0,0,0.75);
+  	border: none;  	
+  	color: black;
+	font-family: Bahnschrift;
+	background-color: rgba(0,0,0,0);
+	font-size: 15px;
 }
 
 button:hover{
-	opacity: 1;
+	background-color: rgba(153, 230, 255, 0.5);
+	color: black;
+}
+
+button:active{
+	background-color: rgb(0, 134, 179);
+	color: white;
 }
 
 #group2 {
-	height: 20px;
+	height: 30px;
 	width: 120px;
 }
+
 img {
 
 }
 #graph-info {
-	background-color: rgba(0,0,0, 0.5);
+	background-color: rgb(229, 230, 232);
 	height: 30px;
 	color: white;
 	position: relative;
 	padding-right: 20px;
+	padding-top: 0px;
+	border-bottom: 1px solid grey;
+	top: -15px;
+
 }
 
 
 #graph-header {
 	position: relative;
-	background-color: rgba(51, 51, 0, 0.5);
+	background-color: rgb(0, 0, 0, 0.75);
 	height: 200px
 	width: 100%;
 	z-index: 1;
-	font-size: 30px;
-	text-align: center;
-	color: white;
-	font-family: Georgia;
+	font-size: 25px;
+	text-align: left;
+	padding: 10px;
+	padding-left:30px;
+	color: rgb(244, 245, 247);
+	box-shadow: 10px 10px 5px grey;
 }
 
 #graph-wrapper {
 	position: fixed;
 	top: 50%;
 	left: 50%;
-	background-color: rgba(0, 0, 0, 0.5);
-	height: 480px;
-	width: 854px;
+	background-color: rgba(255, 255, 255, 0.5);
+	height: 500px;
+	width: 1240px;
 	transform: translate(-50%,-50%);
+	box-shadow: 2px 2px 5px grey;
 }
 
 .bar-chart {
@@ -132,13 +117,23 @@ img {
 	 opacity: 0.8;
 }
 
+#dashboard {
+	height: 400px;
+	width: 350px;
+	background-color: none;
+	border-left: 1px solid grey;
+	position: relative;
+	left: 850px;
+	top: -10px;
+}
+
 div.tooltip {	
     position: absolute;			
     text-align: center;			
     width: 60px;					
     height: 15px;					
     padding: 2px;				
-    font: 12px sans-serif;		
+    font: 12px Bahnschrift;		
     background: lightsteelblue;	
     border: 0px;		
     border-radius: 8px;			
@@ -147,7 +142,7 @@ div.tooltip {
 svg {
 	position: fixed;
 	top: 50%;
-	left: 50%;
+	left: 35%;
 	transform: translate(-50%,-50%);
 
 }
