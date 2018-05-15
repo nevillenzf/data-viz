@@ -22,6 +22,8 @@ d3.csv("https://raw.githubusercontent.com/nevillenzf/data-viz/master/dataset.csv
 		//practice importing data into array
 		//Default set up of page
 		options.push("english");
+		options.push("analytics");
+
 
 		var varButtons = d3.selectAll(".options");
 		var chartButtons = d3.selectAll(".chart");
@@ -160,6 +162,7 @@ function quantityGraph(data, svg, svgWidth, svgHeight,options)
 //     .attr("class", "tooltip")				
 //     .style("opacity", 0);
 
+console.log(currData);
 var x_axis = d3.axisBottom().ticks(0).scale(xScale);
 var y_axis = d3.axisLeft().scale(yScale);
 	svg.append("g")
@@ -182,17 +185,22 @@ var y_axis = d3.axisLeft().scale(yScale);
     	.data(currData)
     	.enter().append("g")
     	.attr("transform",function(d,i){
-    		var translate = [(svgWidth/(currData.length*3.5)) + barWidth*i + i*(svgWidth/(currData.length*1.4)) ,-10];
+    		var manipulate = 0;
+    		if (i > 1) manipulate = 160;
+    		var translate = [(svgWidth/(currData.length*1.75)) + barWidth*i + 
+    		((i)/2)*(svgWidth/(currData.length*1.8) ) + manipulate,-10];
     		return "translate("+ translate + ")";
     	});
 
     	bar.append("rect")
     	.attr("y", svgHeight)
     	.attr("height", 0)
-    	.attr("width",200)
+    	.attr("width",400/currData.length)
 		.attr("class",function(d){
     		if (d == natEng) return "barEng";
-    		else return "barNoEng";
+    		else if(d == analMajor) return "barAnal";
+    		else if(d == data.length - natEng) return "barNoEng";
+    		else if(d == data.length - analMajor) return "barNotAnal";
     	})
 
     	bar.append("text")
