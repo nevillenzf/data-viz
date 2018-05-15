@@ -49,7 +49,7 @@ button:active{
 	color: white;
 }
 
-#group2 {
+.options {
 	height: 30px;
 	width: 120px;
 }

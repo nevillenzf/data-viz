@@ -1,13 +1,14 @@
 
 
 //Set up for Data Viz
-var dataset =[];
+		var dataset =[];
 		var natEng = 0;
 		var analMajor = 0;
 		var both = 0;
 		var noEngAnalMaj = 0;
 		var noAnalengNat = 0;
 		var neither = 0;
+		var options = [];
 
 d3.csv("https://raw.githubusercontent.com/nevillenzf/data-viz/master/dataset.csv")
 	//parse certain data
@@ -20,19 +21,9 @@ d3.csv("https://raw.githubusercontent.com/nevillenzf/data-viz/master/dataset.csv
 
 		//practice importing data into array
 		//Default set up of page
-		var mode = d3.selectAll("#handler")
-		.attr("class", "English");
+		options.push("english");
 
-		var varButtons = d3.selectAll("#group2")
-		.on("click",function(){
-				if (this.classList.contains('selected'))
-				{
-					this.classList.remove('selected');
-				}
-				else{
-					this.classList.add('selected');
-				}
-		})
+		var varButtons = d3.selectAll(".options")
 
 		data.forEach (function(d){
 			dataset.push({participant : d.participant,analyticMajor: d.analyticMajor,nativeEnglish: d.nativeEnglish});
@@ -52,12 +43,37 @@ d3.csv("https://raw.githubusercontent.com/nevillenzf/data-viz/master/dataset.csv
     	.attr("left", "50%")
     	.attr("position","fixed");		
 
+    	varButtons
+    	.on("click",function(){
+				if (this.classList.contains('selected'))
+				{
+					this.classList.remove('selected');
+					removeA(options,d3.select(this).attr("id"));
+				}
+				else{
+					this.classList.add('selected');
+					options.push(d3.select(this).attr("id"));
+				}
+
+		})
+
 		//barGraph(dataset, svg, barWidth, yScale);
-		quantityGraph(dataset, svg, svgWidth, svgHeight)
+		quantityGraph(dataset, svg, svgWidth, svgHeight, options)
 
 		var infoSection = d3.select("ul")
 // Define the div for the tooltip
 })
+
+function removeA(arr) {
+    var what, a = arguments, L = a.length, ax;
+    while (L > 1 && arr.length) {
+        what = a[--L];
+        while ((ax= arr.indexOf(what)) !== -1) {
+            arr.splice(ax, 1);
+        }
+    }
+    return arr;
+}
 
 function booleanToNum(string)
 {
@@ -69,13 +85,10 @@ function booleanToNum(string)
 	else return 0;
 }
 
-function barGraph(data, svg, barWidth, yScale)
+function quantityGraph(data, svg, svgWidth, svgHeight,options)
 {
+	svg.exit().remove();
 
-}
-
-function quantityGraph(data, svg, svgWidth, svgHeight)
-{
 	//Set quantitative data
   	data.forEach (function(d){
 		if (d.nativeEnglish == "1") natEng++;
@@ -92,6 +105,28 @@ function quantityGraph(data, svg, svgWidth, svgHeight)
   	var binaryLabels = ["Yes", "No"];
   	var legendInfo = [];
   	var currData = [];
+  	var animateDur = 800;
+  	var animateDelay = 30;
+
+  		if (options.includes("english"))
+  		{
+  			if (options.includes("analytics"))
+  			{
+  				currData = [eng[0], anal[0], eng[1], anal[1]];
+  				legendInfo = ["Native English Speakers", "Non-Native English Speakers","Analytic Majors","Non-Analytic Major"];
+  			}
+  			else 
+  			{
+  				currData = eng;
+  				legendInfo = ["Native English Speakers", "Non-Native English Speakers"];
+  			}
+  		}
+  		else if (options.includes("analytics"))
+  		{
+  			currData = anal;
+  			legendInfo = ["Analytic Majors","Non-Analytic Major"];
+  		}
+  		else currData = 0;
 
   		var xScale = d3.scaleBand()
     		.domain(binaryLabels)
@@ -101,42 +136,40 @@ function quantityGraph(data, svg, svgWidth, svgHeight)
     		.domain([0, data.length])
    			.range([svgHeight , 20]);
 
+
 // var div = d3.select("body").append("div")	
 //     .attr("class", "tooltip")				
 //     .style("opacity", 0);
 
 var x_axis = d3.axisBottom().ticks(0).scale(xScale);
-
 var y_axis = d3.axisLeft().scale(yScale);
-		svg.append("g")
+	svg.append("g")
     .attr("transform", "translate(20, -10)")
     .call(y_axis);
          
 	var xAxisTranslate = svgHeight - 10;
          
-		svg.append("g")
+	svg.append("g")
     .attr("transform", "translate(20, " + xAxisTranslate  +")")
     .call(x_axis);
 
-    var barWidth = 100;
-    var myChart;
+    var barWidth = 200/currData.length;
+    var numData = currData.length;
 
-    myChart = svg.append("g");
-
+    var myChart = svg.append("g");
 
     var bar = myChart.append("g")
     	.selectAll("g")
-    	.data(eng)
+    	.data(currData)
     	.enter().append("g")
     	.attr("transform",function(d,i){
-    		var translate = [(svgWidth/(eng.length*3.5)) + barWidth*i + i*(svgWidth/(eng.length*1.4)) ,-10];
+    		var translate = [(svgWidth/(currData.length*3.5)) + barWidth*i + i*(svgWidth/(currData.length*1.4)) ,-10];
     		return "translate("+ translate + ")";
     	});
 
-
     	bar.append("rect")
-    	.attr("y", function(d) { return svgHeight - (d*4.5)})
-    	.attr("height", function(d){return d*4.5;})
+    	.attr("y", svgHeight)
+    	.attr("height", 0)
     	.attr("width",200)
 		.attr("class",function(d){
     		if (d == natEng) return "barEng";
@@ -145,11 +178,34 @@ var y_axis = d3.axisLeft().scale(yScale);
 
     	bar.append("text")
     	.attr("x", barWidth-5+"px")
-    	.attr("y", function(d){return svgHeight - (d*4.5) -10;})
+    	.attr("y", function(d){return svgHeight -10;})
     	.text(function (d,i){return d;})
-    	.style("background-color", "rgba(0,0,0,0)");
+    	.style("background-color", "rgba(0,0,0,0)")
+    	.attr("id","dataText");
 
+  d3.selectAll("rect").transition()
+  	.duration(animateDur)
+  	.delay(function (d,i){
+  		return i*animateDelay;
+  	})
+  	.attr('height',function(d){
+  		return d*4.5;
+  	})
+  	.attr('y', function(d){
+  		return svgHeight - (d*4.5)
+  	})
 
+  d3.selectAll("text").transition()
+  	.duration(animateDur - 100)
+  	.delay(function (d){
+  		 return animateDelay;  		
+  	})
+  	.attr("y", function(d){ 
+  		if (d3.select(this).attr("id") == "dataText") {
+  			console.log("wat");
+  			return svgHeight - (d*4.5) -10;}
+
+  		else return d3.select(this).attr("y")})
     	//MOUSE OVER INFO
     	// .on("mouseover", function(d) {		
      //        div.transition()		
@@ -169,14 +225,15 @@ var y_axis = d3.axisLeft().scale(yScale);
     //Legend stuff
     g = svg.append("g").attr("transform", "translate(" + 10 + "," + 10 + ")");
 
-    var z = d3.scaleOrdinal().range(["#ff4d4d","#ffb3b3"]);
+    var z = d3.scaleOrdinal().range(["#ff4d4d","#ffb3b3","#008ae6","#b3e0ff"]
+    	);
 
     var legend = g.append("g")
       .attr("font-family", "Bahnschrift")
       .attr("font-size", 14)
       .attr("text-anchor", "end")
     .selectAll("g")
-    .data(["Native English Speakers", "Non-Native English Speakers"])
+    .data(legendInfo)
     .enter().append("g")
       .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
@@ -191,5 +248,7 @@ var y_axis = d3.axisLeft().scale(yScale);
       .attr("y", 9.5)
       .attr("dy", "0.32em")
       .text(function(d) { return d; });
+
+
 
 }
