@@ -23,7 +23,8 @@ d3.csv("https://raw.githubusercontent.com/nevillenzf/data-viz/master/dataset.csv
 		//Default set up of page
 		options.push("english");
 
-		var varButtons = d3.selectAll(".options")
+		var varButtons = d3.selectAll(".options");
+		var chartButtons = d3.selectAll(".chart");
 
 		data.forEach (function(d){
 			dataset.push({participant : d.participant,analyticMajor: d.analyticMajor,nativeEnglish: d.nativeEnglish});
@@ -53,6 +54,24 @@ d3.csv("https://raw.githubusercontent.com/nevillenzf/data-viz/master/dataset.csv
 				else{
 					this.classList.add('selected');
 					options.push(d3.select(this).attr("id"));
+				}
+
+		})
+
+		chartButtons
+    	.on("click",function(){
+				if (this.classList.contains('selected'))
+				{
+					//Do nothing
+					this.classList.remove('selected');
+
+				}
+				else{
+					// d3.selectAll(".chart")
+					// .attr("classList",function(d){
+					// 	d.remove('selected');
+					// })
+					this.classList.add('selected');
 				}
 
 		})
